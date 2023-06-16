@@ -1,4 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist;from random import randint;from datetime import datetime; from django.shortcuts import render,redirect; from django.http import HttpResponse; from .models import*; from django.contrib.auth import authenticate,logout,login; from dbr import*; from .forms import*; import json; from django.db.models import Q; from django.contrib.auth.models import User; from dateutil.relativedelta import relativedelta; from django.views.decorators.csrf import requires_csrf_token
+
+
 @requires_csrf_token
 def maglumat(request):
     dtgun=datetime.date.today(); date=datetime.datetime.now()
@@ -99,7 +101,7 @@ def creating(request,san):
             elif san==1:
                 def salam():
                     sana=0; sen=randint(1000000000000,9999999999999)
-                    for i in Ishgarler.objects.all():
+                    for i in Ishgarler.objects.select_related('kurs'):
                         if i.barkod_san==sen: sana+=1
                     if sana>0: return salam()
                     elif sana==0: bold=Wezipeler.objects.get(Wezipe_at=request.POST['wezipe']); saving=Ishgarler(at=request.POST['at'], wezipe=bold, gelen_wagty={None:None}, giden_wagty={None:None}, is_bashlayar=bold.is_bashlayar, is_gutaryar=bold.is_gutaryar, obed_bashlayar=bold.obed_bashlayar, obed_gutaryar=bold.obed_gutaryar, barkod_san=sen); saving.save(); bold.san+=1; bold.save()
